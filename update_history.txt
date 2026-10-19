@@ -1,0 +1,253 @@
+set max_input_vars to 1000
+set memory_limit to 1024M
+
+install stat
+install phpMyAdmin
+install
+
+Version Como 
+support namespace
+Namespace support for the extensions, hence enabling even larger extensible system with more possibility of class names
+
+To uses, just add namespace name to the desired extension file.  a single namespace name can be used in multiple files on
+the extensions.
+
+And then on lib_extensions add the namespace during initialisation
+finally \ to each of the global class that is called from each extensions
+
+read_resource
+reading resource file such as CSV to array
+
+trait create_loader_button
+
+Version karawara
++ fibre support for output so it output in smaller chunks to make the system more responsive and free up memory buffer
+
+Version bentley
++ AJAX support for event driven programming between PHP and JavaScript
++ Socket support for event driven
+PHP Run 3 times
+1. Main Thread where it renders the page to the browser
+2. Loader thread where it waits for command from event thread by reading SQL 
+3. Event thread where it input whatever event to the Loader
+Known Issues
++ output fibre will not affect page output speed when using AJAX and event_loop...
+ 
+mcc and multiple_choice function
+multiple conditional checking used to replace nested ifs with single switch and 
+case statement making the code much more readable
+
+add activating better security, e.g. validation, for input
+string bases e.g. text, text area and number
+
+checked is min, max
+for text is maxlength
+
+24 Aug 2023
+vardump function
+automatically spaces with double BRs
+
+bugfix
+all data stored with no blockchain now always on version 0
+resaving data no longer grows the data
+
+enhanced security
+per link now protected by random number that changes for every navigation link
+
+Version bibra lake
+removed secrets for database server from the source code.  Finally!  
+Instead source code is now uses question and answers to the server for more secure approach 
+#[\SensitiveParameter] 
+
+lib_extensions
+fixed interop menu system, now it displays menu from all, not just the latest one
+
+lib_form
+output redresser for html_hidden_display this is used to change the user visible output, but not the fundamental value    
+
+Version VicPark
+MCC -> this will be removed because can be replaced with case statement!
+
+Update on security now uses therefore passwords and secrets are no longer shared with source codes.  This is powerful.  Server is now hosting the security data.
+
+Server, only answer to itself, hence you cannot get the data from outside the server.
+
+Additional improvements
+output_capture is now enabled and generic on the list.  Hence the value can be accessed raw from the list with output_capture enabled therefore output can be used for other purposes with minimal / neglible sacrifice on performance.
+
+However implementing output_capture must be done carefully because it is raw and one type of entity / record can result in different format.
+
+Version cannington
+implementation of deferred_loader system to a list make work faster by deferring database reading, 
+	and the actually loading it during database select operation or get operation
+implementation of multiple index system on database, therefore speeding up operation by orders of magnitude
+	for weaving reports
+initialising speed up - now database creation no longer triggers everytime the apps is invoked, because the
+	operation is already recorded on cache
+settings - now setting edits only produces 'chosen settings',
+ 
+    1. Class record Set / store now have multiple index dimensions and effectively works as a tree.  Index can be multiple indices of multiple array, unpacked with … and done using recursive method
+        a. _set($root, $value, $indices) 
+        b. Root is the root of $this->data[$field][$index1] etc depending on the recursion depth
+        c. Value is value
+        d. The return from recursion root will replace the root, but no data will be loss
+    2. Class record Get receive the same treatment
+    3. lib_baseclass function Hash will have 
+        a. Default salt, from constant
+        b. Pepper, from a field  -> DONE
+        c. Nonce random number from 0 to N-1.  If 0 or null, then will not add nonce, 10 means 0 to 9 -> DONE
+        d. A new function hash_nonce which will return all nonces of a particular hash
+    4. Function sha512 and sha512iteration -> still used
+    5. Lib_datamodule Add_index – will now use hash function - DONE
+        a. For the index column & name pepper is human readable table name before hashing
+    6. Lib_baseclass function db_indices_scrambler -> DONE
+        a. Update hash key to the same with name and pepper human readable table name
+        b. Update hash value with pepper human readable table_name and nonce of 10
+    7. Update human readable table name and data on encrypt as sensitive parameter
+    8. Lib_baselist
+        a. function add_db_index will add nonce information after is_function and before …params -> DONE
+        b. function db_index_fill will add hash_nonces in $condition => $values loop -> done
+        c. function db_field_lookup will update with hash_nonces and WHERE IN () -> done with caveats possibly logic conflict
+
+password updated to password_hash for optimum security
+db_index_fill works in db_indices as AND, if you needed OR, run this method twice!
+
+mcc and multiple_choice is has been removed
+removed a lot of legacy codes, hopefully its worth it
+
+Version Wilson
+add new layout_maker
+a tool for defining form layout concisely, relatively speaking, hence making the setting and arranging the form simpler and
+easier
+format is %name% 
+just make your html and css include as usual on layout_maker, and then put where the form will be input using %name% format
+
+the system will automatically arrange them
+
+update on user_management, now each extension got its own userr management.    
+
+Version Karrinyup 
+Philosophy update: Redefining expansion and extension into two distinct folder with distinct functionality
+but still shared class
+
+reorganising schedule and member / contacts to extensions
+
+Removal of almost all legacy codebase
+
+Removal of other frames, and changed to iframe, removing making total HTML 5 compliance!
+
+Bug FIX on query builder, now fields is in '`'
+Bug FIX on load method, now accepts 0 as unique identifier
+
+Stability updates
+
+Daterange input - input of two dates in range
+
+Update on dropdown input, now can accept not selected, e.g. treated as null
+
+update on input method: now support ...fields, to update only certain input 
+
+remove now working on tree!
+t_select now working on tree
+
+fixing of AJAX bug, now AJAX is working properly again
+
+Version Winthrop
+
+Too much update on the Karrinyup, hence changing the name to Winthrop
+name of object_X changed to s_lib, so the name is not funny anymore
+_get, _set, _rem moved to s_lib
+
+lib_form will be updated to use _get, _set, and _rem
+
+set_number_input_range to automatically set placeholder and min max of input range 
+fixed placeholder algorithm for number input
+
+fixed lib_input for typo
+fixed lib_input for dropdown
+
+add_range input for number range made
+on_click was made -> used to tell if a button is clicked or not, and return boolean 
+and button_click was made -> this will determine when a button is clicked, must be propagated on standard input.
+
+Version Melville
+WebService Authentication 
+using username and secret string as login string for web application, e.g. esp32 to inject efficiency
+Authorised only on administrator in the mean time.
+
+master_junction class is the superclass of junction and webservice_junction
+Requires Special junction class, that is designed to work only on web application. Status work in progress!
+
+Fixed dynamic IV system is now working.  dbm::dbm_record_1 can be used when creating new list!  
+Recommended for new deployment by changing dbm_record_default to dbm_record_1  
+
+new salt webauth_hash_salt -> for webauth maker code.  E.g. if its transfered without authorisation to different 
+people, it should reject the transfer
+
+update to integrity OK, add more strict requirements to ensure no swapping inside the data/value pair
+
+Bug Fix on db_field_lookup and db_lookup, it should be more stable
+
+Version Booragoon
+Update to lib_form.php
+new class fc_form => flowcontrol_form which allows for complex multi form branching with multiple
+submit buttons and insert method
+
+inputform_control is not recommended for future development!
+
+resource reader is now on a seperate file, and fully cached
+
+New method get_credentials_from_master 
+This method is used to get all credentials of master
+
+New constant _extending
+_extending is used in the interop, to tell  which function it is extending from
+_extending is working as special parameter when an interop is used between two classes.
+It works automatically 
+
+Please make sure _extending is not overriden. 
+Extending is is a native in fc_form
+You will need to call method set_extending to set the extender and the extending class name 
+support for inputform_control is not planned!
+
+Version Kewdale
+5th Jan 26
+cat function on smart_list
+
+refactored smart_list and advanced_list
+smart_list now enhances advanced_list with HTML functions only
+While advanced_list, handles with get_sub_list, recast, sub_list, and extract, group_by, get_lowest previously owned by smart_list
+ 
+Refactoring some of the other codes and removal of deprecated codes.
+
+stats_* functions are mostly refactored to stats:: still needs testing
+It should promise better performance because data is no longer going to many layers of filters and sorts
+stats_function is 'NOT DEPRECATED' and can be used because it will run the data to a filter before calculating whatever is needed.  Mostly by calling stat::functions 
+
+bug fix - miniform now uses 'save' as default settings, the button will always have standard caption if not specified
+
+Version Bull Creek
+13th April 2026
+Update on set and get on simple list. Now Final. Now utilises _set and _get from s_lib, making it much more versatile
+and now list can also store internal data!
+
+lib_form no longer autoread the csv file uploaded
+read is now must be done manually
+guessing CSV and SSV handler is now seperated.  
+Handler is now must be specified, whether its ssv, json or csv, instead of auto selecting.  Faster and better for multiple handler types with overlapping values.
+
+
+bugfix:
+date_iterator is now inclusive the last day, as it should be inclusive!
+
+html_hidden_display now recognise date range and can properly display daterange 
+welcome.php was removed, and changed to welcome junction
+
+dv1.css updated to new skin and renamed to screen.css
+print.css was added for printing needs. Nothing fancy, just printing.
+
+Version Canning Vale - 2026 - 09 
+jpeg_upload support!
+Yay!  image handler is a component
+Image viewer is also a component
+Webervice is also a component
