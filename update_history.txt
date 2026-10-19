@@ -1,3 +1,7 @@
+Update History since 2022.
+
+Messy, yes, but, yea, it was privately used, and back then not planned to be made public
+
 set max_input_vars to 1000
 set memory_limit to 1024M
 

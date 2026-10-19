@@ -3,5 +3,5 @@
 	
 	$credentials->logout();
 
-	header("Location: https://192.168.0.79/shella");
+	header("Location: localhost");
 ?>
