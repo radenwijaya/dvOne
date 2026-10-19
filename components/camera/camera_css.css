@@ -1,0 +1,10 @@
+.camera_input{
+	width: 640px;
+	border: 1px solid black;
+}
+.camera_input video{
+	width: 640px;
+}
+.camera_input img{
+	width: 640px;
+}

@@ -1,0 +1,465 @@
+﻿/* dv1.css — LAN app UI (desktop, tablet, phone) */
+
+:root {
+	--bg: #eef1f5;
+	--surface: #ffffff;
+	--surface-2: #f8fafc;
+	--text: #1e293b;
+	--text-muted: #64748b;
+	--border: #d8dee9;
+	--border-strong: #b8c2d0;
+	--primary: #1d5bbf;
+	--primary-hover: #164a99;
+	--primary-soft: #e8f0fc;
+	--danger: #c62828;
+	--danger-soft: #fdecec;
+	--radius: 8px;
+	--radius-sm: 5px;
+	--shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.07);
+	--content-max: 100%;
+	--font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+	--tap: 44px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 12px;
+	font-family: var(--font);
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--text);
+	background: var(--bg);
+	min-height: 100vh;
+	overflow-x: hidden;
+}
+
+/* ----- header ----- */
+
+#logo,
+img#logo,
+body > img[alt="logo"] {
+	display: block;
+	height: 44px;
+	width: auto;
+	margin: 0 0 8px 0;
+}
+
+h1,
+#title {
+	display: block;
+	margin: 0 0 14px 0;
+	font-size: 1.35rem;
+	font-weight: 700;
+	line-height: 1.25;
+	color: var(--text);
+}
+
+h2 {
+	margin: 1rem 0 0.6rem;
+	font-size: 1.15rem;
+	font-weight: 600;
+}
+
+h3, h4, h5, h6 {
+	margin: 0.8rem 0 0.4rem;
+}
+
+p {
+	margin: 0.6rem 0;
+}
+
+/* ----- navigation (inline links from PHP) ----- */
+
+body > a,
+body > a[target="_self"] {
+	display: inline-block;
+	margin: 0 6px 8px 0;
+	padding: 10px 14px;
+	min-height: var(--tap);
+	line-height: 1.2;
+	border-radius: var(--radius-sm);
+	color: var(--primary);
+	background: var(--primary-soft);
+	border: 1px solid #c7daf5;
+	text-decoration: none;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+body > a:hover,
+body > a:focus-visible {
+	background: var(--primary);
+	border-color: var(--primary);
+	color: #fff;
+}
+
+a {
+	color: var(--primary);
+	text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+	color: var(--primary-hover);
+	text-decoration: underline;
+}
+
+/* ----- tables ----- */
+
+table {
+	width: 100%;
+	margin: 0 0 14px 0;
+	border-collapse: collapse;
+	background: var(--surface);
+	border: 1px solid var(--border-strong);
+	font-size: 0.9rem;
+}
+
+table th,
+table td {
+	padding: 9px 10px;
+	border: 1px solid var(--border);
+	text-align: left;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+table th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: #ffe8c7;
+	color: #5c3b1e;
+	font-weight: 700;
+}
+
+table tbody tr:nth-child(even) td {
+	background: var(--surface-2);
+}
+
+table tbody tr:hover td {
+	background: #edf3fa;
+}
+
+table tr td span[title] {
+	border-bottom: 1px dotted var(--text-muted);
+	cursor: help;
+}
+
+table tr:last-child th {
+	background: #dbe4ef;
+	color: var(--text);
+	font-weight: 700;
+}
+
+/* phone/tablet: scroll wide tables, not whole page */
+@media (max-width: 1023px) {
+	table {
+		display: block;
+		overflow-x: auto;
+		max-width: 100%;
+	}
+
+	table thead,
+	table tbody,
+	table tr {
+		width: max-content;
+		min-width: 100%;
+	}
+
+	table th,
+	table td {
+		padding: 10px 12px;
+	}
+}
+
+/* ----- forms ----- */
+
+form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin: 0 0 12px 0;
+	padding: 12px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+label {
+	font-weight: 600;
+	color: var(--text);
+}
+
+input,
+select,
+textarea,
+button {
+	font: inherit;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="search"],
+select,
+textarea {
+	padding: 10px 12px;
+	min-height: var(--tap);
+	border: 1px solid var(--border-strong);
+	border-radius: var(--radius-sm);
+	background: #fff;
+	color: var(--text);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 2px solid var(--primary);
+	outline-offset: 1px;
+}
+
+input[type="submit"],
+input[type="button"],
+button {
+	padding: 10px 18px;
+	min-height: var(--tap);
+	border: 1px solid var(--primary);
+	border-radius: var(--radius-sm);
+	background: var(--primary);
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover {
+	background: var(--primary-hover);
+	border-color: var(--primary-hover);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	width: 1.1rem;
+	height: 1.1rem;
+	accent-color: var(--primary);
+}
+
+/* ----- utility classes ----- */
+
+.stl_warning,
+.stl_holiday {
+	color: var(--danger);
+	font-weight: 700;
+}
+
+.stl_copyright {
+	font-size: 0.75rem;
+	color: var(--text-muted);
+}
+
+.redeye {
+	background-color: var(--danger-soft) !important;
+	color: var(--danger);
+	font-weight: 700;
+}
+
+.boxed_div {
+	width: 100%;
+	margin: 0 0 12px 0;
+	padding: 12px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--surface);
+}
+
+.splitdiv {
+	display: flow-root;
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+.splitdiv::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.splitdiv div:first-child,
+.splitdiv div:last-child {
+	float: left;
+	width: 50%;
+	padding: 0 6px;
+}
+
+#local_navigation {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 12px 0;
+	padding: 8px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+#local_navigation div {
+	min-width: 120px;
+	flex: 1 1 140px;
+	text-align: center;
+	padding: 10px;
+	border-radius: var(--radius-sm);
+	background: var(--surface-2);
+}
+
+.stl_table_borderless,
+.stl_table_borderless table {
+	border: none;
+	background: transparent;
+	margin-left: 0;
+}
+
+.stl_table_borderless tr,
+.stl_table_borderless tr td,
+.stl_table_borderless tr th {
+	border: none;
+	background: transparent;
+	position: static;
+}
+
+canvas {
+	display: block;
+	max-width: 100%;
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+}
+
+/* ----- phone ----- */
+
+@media (max-width: 767px) {
+	body {
+		padding: 10px;
+		font-size: 14px;
+	}
+
+	h1,
+	#title {
+		font-size: 1.2rem;
+	}
+
+	body > a,
+	body > a[target="_self"] {
+		width: 100%;
+		margin-right: 0;
+		text-align: center;
+	}
+
+	form {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	form input[type="date"],
+	form input[type="text"],
+	form input[type="number"],
+	form select,
+	form textarea {
+		width: 100%;
+	}
+
+	form input[type="submit"],
+	form input[type="button"],
+	form button {
+		width: 100%;
+	}
+
+	.splitdiv div:first-child,
+	.splitdiv div:last-child {
+		float: none;
+		width: 100%;
+		padding: 0;
+	}
+}
+
+/* ----- tablet ----- */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	body {
+		padding: 14px;
+	}
+
+	body > a,
+	body > a[target="_self"] {
+		min-width: 180px;
+		text-align: center;
+	}
+}
+
+/* ----- desktop ----- */
+
+@media (min-width: 1024px) {
+	body {
+		padding: 16px 20px;
+	}
+
+	#logo,
+	img#logo,
+	body > img[alt="logo"] {
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 12px 12px 0;
+		height: 48px;
+	}
+
+	h1,
+	#title {
+		display: inline-block;
+		vertical-align: middle;
+		margin-bottom: 12px;
+		font-size: 1.55rem;
+	}
+
+	table {
+		font-size: 0.92rem;
+	}
+
+	table th,
+	table td {
+		padding: 8px 11px;
+	}
+}
+
+#if_menu{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	min-width: 22em;
+	width: 16%;
+	border: none;
+	height: 100%;	
+}
+#if_contents{	
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 23em;
+	width: 83%;
+	border: none;
+	height: 100%;
+}

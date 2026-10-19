@@ -1,0 +1,13 @@
+Original
+image_compressor class handle image  checking, loading and compressing
+
+Updated
+image_compress class
+Used to load image from upload process and store it on database!
+
+image_inject class
+part of secure_page
+This will inject the image as a page
+
+image.png -> on root, invoke_page
+manta.jpeg -> the test file for the image
