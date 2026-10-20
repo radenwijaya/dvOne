@@ -300,7 +300,7 @@
 		
 		function currency_output($value, $format=true, $output_locale=false)
 		{
-			return finance::money_format($output_locale ? $output_locale : set_locale(LC_MONETARY), $value);			
+			return $format ? finance::money_format($output_locale ? $output_locale : setlocale(LC_MONETARY), $value) : $value;			
 			
 /*			$result=$value;
 			

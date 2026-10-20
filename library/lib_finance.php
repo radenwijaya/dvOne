@@ -754,9 +754,9 @@
 			$fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 			
 			if ($curr=='')
-				$curr=$fmt->getSymbol(NumberFormatter::CURRENCY_CODE);
+				$curr=$fmt->getTextAttribute(NumberFormatter::CURRENCY_CODE);
 				
-			return $fmt->formatCurrency($fmt, $curr);
+			return $fmt->formatCurrency($number, $curr);
 		}
 		
 		static function money_to_string(string $locale, string $value, &$curr): float
