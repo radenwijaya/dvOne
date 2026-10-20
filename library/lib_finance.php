@@ -743,7 +743,30 @@
 			return $result;
 		}
 	}
+	
+	class finance
+	{
+		static function money_format(string $locale, float $number, $curr=''): string
+		/* 
+		 * Set curr to blank for automatic
+		 */
+		{									
+			$fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+			
+			if ($curr=='')
+				$curr=$fmt->getSymbol(NumberFormatter::CURRENCY_CODE);
+				
+			return $fmt->formatCurrency($fmt, $curr);
+		}
 		
+		static function money_to_string(string $locale, string $value, &$curr): float
+		{
+			$fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+			
+			return $fmt->parseCurrency($value, $curr);
+		}
+	}
+			
 	trait monetary
 	{
 		var $exchange;

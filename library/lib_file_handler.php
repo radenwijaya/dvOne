@@ -161,6 +161,14 @@
 		{
 			return $this->contents[$format];
 		}
+		
+		function as_element($args)
+		/*
+		 * Converting value as HTML elements,
+		 */
+		{
+			return null;
+		}		
 	}
 	
 	class csv_handler extends file_handler

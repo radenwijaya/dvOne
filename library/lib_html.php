@@ -20,7 +20,7 @@
 		{
 			return $ordered ? '</ol>' : '</ul>';
 		}
-				
+		
 		static function create_html_list($ordered=true, ...$elements)
 		/*
 		 * Input elements of the list in array format 'sequence' => 'value'

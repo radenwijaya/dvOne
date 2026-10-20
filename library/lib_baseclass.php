@@ -300,7 +300,9 @@
 		
 		function currency_output($value, $format=true, $output_locale=false)
 		{
-			$result=$value;
+			return finance::money_format($output_locale ? $output_locale : set_locale(LC_MONETARY), $value);			
+			
+/*			$result=$value;
 			
 			$current_locale=setlocale(LC_MONETARY, 0);
 			
@@ -323,7 +325,7 @@
 				}
 			}
 			
-			return $result;
+			return $result;*/
 		}
 		
 		function currency_value($value, $format=true, $output_locale=false)
@@ -3591,68 +3593,7 @@
 			return $this->form;
 		}
 	}	
-			
-	class currency_format extends s_lib
-	{
-		var $value;
-		var $currency;
-	
-		function add($value=0)
-		{
-			if (is_object($value))
-			{
-				if (get_class($this)==get_class($value))
-				{
-					$this->value+=$value->value;
-				}
-			}
-			else
-			{
-				$this->value+=$value;
-			}
-				
-			return $this->value;
-		}
-	
-		function multiply($value=1)
-		{
-			if (is_object($value))
-			{
-				if (get_class($this)==get_class($value))
-				{
-					$this->value*=$value->value;
-				}
-			}
-			else
-			{
-				$this->value*=$value;
-			}
-	
-			return $this->value;
-		}
-	
-		function __construct($value=0, $currency='id_ID')
-		{
-			$this->value=$value;
-			$this->currency=$currency;
-		}
-	
-		function toString()
-		{
-			$locale=setlocale(LC_MONETARY, 0);
-			setlocale(LC_MONETARY, $this->currency);
-			$result=money_format('%i', $this->value);
-			setlocale(LC_MONETARY, $locale);
-				
-			return $result;
-		}
-	
-		function __toString()
-		{
-			return $this->toString();
-		}
-	}
-	
+		
 	class conversion extends entity
 	{		
 		var $length_conversion_table;

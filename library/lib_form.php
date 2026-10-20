@@ -1756,7 +1756,7 @@
 			if ($field['placeholder']!='') 
 			{
 				if (is_numeric($field['placeholder']))
-				{											
+				{							
 					$placeholder=$this->html_numeric_format($field, 'placeholder');
 /*					setlocale(LC_MONETARY, $field['currency']);
 					$placeholder=money_format('%i', $field['placeholder']);
@@ -1799,17 +1799,9 @@
 				$toDisplay=$field['value'];
 			else
 				$toDisplay=0;
-						
-			if ($field['currency']==default_locale)
-			{						
-				$result=money_format('%i', $toDisplay);
-			}
-			else 
-			{				
-				setlocale(LC_MONETARY, $field['currency']);
-				$result=money_format('%i', $toDisplay);
-				setlocale(LC_MONETARY, default_locale);			
-			}
+
+			$result=finance::money_format($field['currency'], $toDisplay);
+			
 			return $result;
 		}
 		
@@ -3276,17 +3268,8 @@
 			if (!is_array($field))
 				$field=$this->fields[$field];
 			
-			if ($field['currency']==default_locale)
-			{
-				$result=money_format('%i', $number);
-			}
-			else 
-			{
-				setlocale(LC_MONETARY, $field['currency']);
-				$result=money_format('%i', $number);
-				setlocale(LC_MONETARY, default_locale);
-			}
-			
+			$result=finance::money_format($field['currency'], $number);
+						
 			return $result;
 		}
 		
