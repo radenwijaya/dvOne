@@ -1186,7 +1186,9 @@
 		 * if new_name is original, then use original file name
 		 * otherwise whatever value of new_name
 		 */
-		{
+		{			
+			$status=0;
+			
 			$file_name='';
 			$extension=$this->fields[$name]['file_type'];
 			
@@ -1216,7 +1218,8 @@
 			{
 				if (move_uploaded_file($this->fields[$name]['file_name'], $actual_filename))
 				{
-					$this->fields[$name]['actual_file']=$actual_filename;
+					$status=1;
+					$this->fields[$name]['actual_file']=$actual_filename;					
 				}
 				else
 				{
@@ -1224,11 +1227,19 @@
 				}
 			}
 			else
-				throw new Exception('File Exists');
+			{
+				/*
+				 * File already exists, which is the old file. 
+				 * No need to crash or die, just walk because it is already verified by SHA3 that the contents is the same
+				 */
+				$status=2;
+				$this->fields[$name]['actual_file']=$actual_filename;
+			}				
 			
-			$this->select('image', 'contents')->update_filename($actual_filename);
+			$this->add_mandatory_input('_actual_upload_'.$name, $actual_filename);
+			$this->select($name, 'contents')->update_filename($actual_filename);
 			
-			return $file_name;
+			return ['status' => $status, 'filename' => $file_name];
 		}
 		
 		function add_upload($caption, $name, $accept, $max, $params, $input_step=0)
@@ -1242,6 +1253,7 @@
 			$this->upload_form=true;
 			
 			//if (!is_array($accept)) $accept=[$accept];
+			$this->add_mandatory_input('_actual_upload_'.$name, '');
 			
 			$this->add_field($caption, $name, 'file', '', $input_step);
 			
@@ -1252,7 +1264,7 @@
 				$this->add_specification($name, 'upload_args', $params['upload_args']);
 			
 			$this->add_specification($name, 'accept', $accept);
-			$this->add_specification($name, 'max', $max);
+			$this->add_specification($name, 'max', $max);			
 		}
 		
 		function html_upload($field)
@@ -2403,20 +2415,29 @@
 								{										
 									if (is_string($datasource[$name]))
 									{
+										/*
+										 * Second Step Upload
+										 */
 										$this->fields[$name]['value']=$datasource[$name];
 										
-										$file_name=upload_temp_location.$datasource[$name];
+										//$file_name=self::upload_temp_location.$datasource[$name];
+										$file_name=$this->select("_actual_upload_".$name);
+										
+										$mime=pathinfo($file_name, PATHINFO_EXTENSION);										
 									}
 									else
 									{
+										/*
+										 * First Step Upload
+										 */
 										$this->fields[$name]['value']=$datasource[$name]['name'];
 										
 										$file_name=$datasource[$name]['tmp_name'];
+										$mime=pathinfo($datasource[$name]['full_path'], PATHINFO_EXTENSION);
 									}
 									
 									$this->fields[$name]['size']=filesize($file_name);
 									
-									$mime=pathinfo($datasource[$name]['full_path'], PATHINFO_EXTENSION);
 									$this->fields[$name]['file_type']=$mime;
 									$this->fields[$name]['file_name']=$file_name;
 									$this->fields[$name]['file_signature']=hash_file('sha3-256', $file_name);
