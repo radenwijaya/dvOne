@@ -39,18 +39,19 @@
 			
 			$link_ids['init_item_collapsed']=$collapsed;
 			$link_ids['init_menu_collapsed']=$menu_collapsed;
-				
-			foreach ($modules_menu as $module_menu)
-				$this->pageContents.=$module_menu;
-				
+								
 			$js_variable=new js_variable($credentials, $link_ids);
 			$this->add_features($js_variable);
 			
 			$interface=new adaptive_collapse_interface($credentials, $input, $secure_db, $readonly_db, $link_names);
+			$contents=$interface->output();
 			
+			foreach ($modules_menu as $module_menu)
+				$contents[value].=$module_menu;
+				
 			$this->form_input_step=$interface->form->input_step;
 			
-			$this->pageContents.=$interface->toHTML();
+			$this->pageContents=$contents;
 		}
 		
 		function write_output()

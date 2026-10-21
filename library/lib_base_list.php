@@ -2215,6 +2215,11 @@
 			}
 		}
 		
+		function render()
+		{
+			return $this->toHTML();
+		}
+		
 		function toHTML()
 		{
 			$tableheader="";
@@ -2323,6 +2328,14 @@
 	 * Be it HTML Table or HTML Dropdown
 	 */
 	{
+		function render()
+		/*
+		 * Render the list, it could be as HTML or as CSV, or could be as anything.
+		 */
+		{
+			return $this->toHTML();
+		}
+		
 		function toHTML()
 		{
 			$tableheader="";

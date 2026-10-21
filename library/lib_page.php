@@ -171,10 +171,13 @@
 			}
 			else
 			{
-				if (is_array($c=$this->getContents()))
-					$content=$c['value'];
-				else
-					$content=$c;
+				$content='';
+				
+				$c=$this->getContents();
+				if (isset($c['family_menu']))
+					$content=$c['family_menu'];
+					
+				$content.=$c['value'];
 			}
 				
 			$exec=[];
@@ -310,7 +313,7 @@
 						$this->toJSON($contents[value]);
 						break;
 					default: case 'html':
-						$result.=$this->toHTML();
+						$result=$this->toHTML();						
 						break;
 				}
 			}
@@ -1137,7 +1140,7 @@
 		 * override when needed in subclass
 		 */
 		{
-			return 'inputform_control';
+			return 'fc_form';
 		}
 						
 		function fibre_enabled($x=null)
@@ -1164,32 +1167,45 @@
 				return $this->content_source();
 		}
 		
-		function toHTML()
+		final function output()
 		/*
 		 * If this is fibre output disabled then it will direcly use answer
 		 *
 		 * otherwise it will make promise only to be engaged later during to html by page class
 		 */
 		{
-			if (!$this->fibre_enabled('output'))
+			if (method_exists($this, 'toHTML'))
 			/*
-			 * Gather output directly to result
+			 * For compatibility reason, some function had self to HTML converter option
+			 * It will take precedence.  ...
+			 * toHTML in is not recommended on junction and needs to be deprecated/removed.
 			 */
 			{
-				$result=$this->enable_family_menu ? $this->write_family_menu() : '';
-				
-				$result.=$this->content_source() ? $this->content_source()->toHTML() :
-						($this->form ? $this->form->toHTML() : implementation_not_ready);
+				$result=[type => 'html', 'value' => $this->toHTML()];
 			}
 			else
-			/*
-			 * Promise to output later during toHTML in page class
-			 */
 			{
-				$result=['type' => 'html'];
-				
-				if ($this->enable_family_menu)
-					$result['family_menu']=$this->write_family_menu();
+				if (!$this->fibre_enabled('output'))
+				/*
+				 * Gather output directly to result
+				 */
+				{			
+					$cs=$this->content_source() ? $this->content_source() : ($this->form ? $this->form : throw new Exception(implementation_not_ready));
+	
+					$result=$cs->render();
+					
+					$result['family_menu']=$this->enable_family_menu ? $this->write_family_menu() : null;						
+				}
+				else
+				/*
+				 * Promise to output later during toHTML in page class
+				 */
+				{
+					$result=['type' => 'html'];
+					
+					if ($this->enable_family_menu)
+						$result['family_menu']=$this->write_family_menu();
+				}
 			}
 			
 			return $result;

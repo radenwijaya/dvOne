@@ -957,6 +957,12 @@
 	    			$this->addData('att_18', $day->uniqueid);	    	
 	    			break;
 	    		}
+	    		case $day->forcedleave($this->username):
+	    		{
+	    			$result=attendance::conclusion_map([23])[23][$is_short];
+	    			$this->addData('att_23', $day->uniqueid);
+	    			break;
+	    		}
 	    		default:
 	    		{
 	    			$att_status=$day->attendance_status($this);
@@ -1011,7 +1017,10 @@
 	     *   
 	     */
 	    {
-	        $result=[];
+	    	$result=[];
+	    	foreach ($to_conclude as $att_status)
+	    		$result[$att_status]=0;
+	    	
 	        $at8=0;
 	        
 	        foreach ($to_conclude as $att_status)
@@ -1050,7 +1059,7 @@
 	                    break;
 	                case 8:
 	                	$result[$att_status]=(float) $at8 ?: 0;
-	                    break;
+	                    break;	                    
 	                case 11: 
 	                	$at11=0;
 	                    if ($attendance=$this->select('att_'.$att_status))
@@ -1077,6 +1086,11 @@
 	                			($this->on_maternity_privilege($day->uniqueid)))
 	                			$result[$att_status]++;
 	                	}
+	                	break;
+	                case 23:
+	                	foreach ($days as $day)
+	                		if ($day->forcedleave($this->select('username')))
+	                			$result[$att_status]++;
 	                	break;
 	                default:
 	                    if ($attendance=$this->select('att_'.$att_status))

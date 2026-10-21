@@ -18,7 +18,7 @@
 				$this->interface=$this->prepare_junction($junction, $credentials, $input, $secure_db, $readonly_db);
 				if ($this->interface)
 				{
-					$this->pageContents=$this->interface->toHTML();
+					$this->pageContents=$this->interface->output();
 					$this->H1Title=$this->interface->form_title();
 					
 					$this->pageTitle=$this->H1Title;

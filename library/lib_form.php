@@ -180,7 +180,7 @@
 			return $this->rv_output_step[$this->input_step];
 		}
 			
-		function toHTML()
+		function render()
 		/*
 		 * This will invoke the output_function of this class, which is defined in rv_output_step
 		 * 
@@ -190,37 +190,49 @@
 		 * While the other stuff refactored to inputform_control
 		 */		 
 		{
-			$output_step_count=count($this->rv_output_step);
-			if ($output_step_count>0)
+//			$output_step_count=count($this->rv_output_step);
+			if ($this->output_function())
 			{
 				$output_function=$this->output_function();
 				if (method_exists($this, $output_function))
 				{
 					$of_result=$this->$output_function();
-					if (($this->has_layout_maker()) && (is_array($of_result)))
+					if (is_array($of_result))
 					{
-						$result=$this->layout_maker()->assign_layout($of_result);
+						if ($this->has_layout_maker())
+						{
+							$result[type]=['html'];
+							$result[value]=$this->layout_maker()->assign_layout($of_result);
+						}
+						else
+						{
+							if ($of_result[type]!='text/csv')
+							{
+								$result='Layout maker not implemented';
+								throw new Exception($result);
+							}
+							else
+							{							
+								$result=$of_result;
+							}
+						}
 					}
 					else
 					{
-						if (is_array($of_result))
-						{
-							$result='Layout maker not implemented';
-							throw new Exception($result);
-						}
-						else
-							$result=$of_result;
+						$result[type]='html';
+						$result[value]=$of_result;
 					}
 				}
 				else
 				{
-					$result='Output function not implemented';
+					$result[value]='Output function not implemented';
 					throw new Exception('Output function not implemented');
 				}
 			}
 			else
-			{
-				$result=$this->toStringFormat('<br>', true);
+			{				
+				$result[type]=['html'];
+				$result[value]=$this->toStringFormat('<br>', true);
 			}
 			
 //			if ($this->)
@@ -230,10 +242,10 @@
 		
 		function toString()
 		/*
-		 * Alias to toHTML
+		 * Render the form, and return the string in it!
 		 */
 		{
-			return $this->toHTML();
+			return $this->render()[value];
 		}
 		
 		function get_caption($field)
@@ -3861,40 +3873,50 @@
 			return $method;
 		}
 		
-		function toHTML()
-		{
-			$output_step_count=count($this->_io_tree);
-			
-			if ($output_step_count>0)
+		function render()
+		{			
+			if ($this->output_function())
 			{				
 				$output_function=$this->output_function();
 				if (method_exists($this, $output_function))
 				{
 					$of_result=$this->$output_function();
-					if (($this->has_layout_maker()) && (is_array($of_result)))
+					if (is_array($of_result))
 					{
-						$result=$this->layout_maker()->assign_layout($of_result);
+						if ($this->has_layout_maker())
+						{
+							$result[type]=['html'];
+							$result[value]=$this->layout_maker()->assign_layout($of_result);
+						}
+						else
+						{
+							if ($of_result[type]!='text/csv')
+							{
+								$result='Layout maker not implemented';
+								throw new Exception($result);
+							}
+							else
+							{
+								$result=$of_result;
+							}
+						}
 					}
 					else
 					{
-						if (is_array($of_result))
-						{
-							$result='Layout maker not implemented';
-							throw new Exception($result);
-						}
-						else
-							$result=$of_result;
+						$result[type]='html';
+						$result[value]=$of_result;
 					}
 				}
 				else
 				{
-					$result='Output function not implemented';
+					$result[value]='Output function not implemented';
 					throw new Exception('Output function not implemented');
 				}
 			}
 			else
 			{
-				$result=$this->toStringFormat('<br>', true);
+				$result[type]='html';
+				$result[value]=$this->toStringFormat('<br>', true);
 			}
 			
 			//			if ($this->)

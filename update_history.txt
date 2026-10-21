@@ -255,3 +255,13 @@ jpeg_upload support!
 Yay!  image handler is a component
 Image viewer is also a component
 Webervice is also a component
+
+render now replace toHTML in both smart_list and lib_form
+render output string for the HTML or CSV value, and type.
+type = 'html' or 'text/csv'
+
+So it now made sense should you wanted to export CSV.
+
+Using name toHTML still work because of compatibility layer and become the first priority on junction.  but should not be used anymore.
+
+in junction family and page family, toHTML are baptised to output.
