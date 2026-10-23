@@ -309,8 +309,22 @@
 		}
 		
 		function add_default_condition($new_condition)
+		/*
+		 * Add function => parameter db_fill condition
+		 */
 		{
 			$this->default_dbfill_condition=$new_condition;
+		}
+		
+		function remove_default_condition(...$conditions)
+		/*
+		 * Enters the function to remove
+		 */
+		{
+			foreach ($conditions as $condition)
+				foreach ($this->default_dbfill_condition as $key => [f => $f])
+					if ($f==$condition)
+						unset($this->default_dbfill_condition[$key]);			
 		}
 		
 		function db_export_fill($conditions=[], $addon_indices=[], $from_archive=false, $limit=PHP_INT_MAX)
@@ -2217,7 +2231,7 @@
 		
 		function render()
 		{
-			return $this->toHTML();
+			return [type => 'html', 'value' => $this->toHTML()];
 		}
 		
 		function toHTML()
@@ -2333,7 +2347,7 @@
 		 * Render the list, it could be as HTML or as CSV, or could be as anything.
 		 */
 		{
-			return $this->toHTML();
+			return [type => 'html', 'value' => $this->toHTML()];
 		}
 		
 		function toHTML()

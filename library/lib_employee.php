@@ -217,10 +217,9 @@
 	    	return (empty($full_name)) ? $this->get('username') : implode(' ', $full_name);
 	    }
 	    
-	    function getOvertimeCosts($day=null)
+	    function getHourlyCost($day=null)
 	    /*
-	     * You can add day, month and whatever time quantifier as day, and 
-	     * this function will return the total number of dayoff used
+	     * This method will run cost of working per hour of a person 
 	     */
 	    {	    	
 	    	$bonus=$this->get_skill_bonus($day)+$this->t_select($day, 'salary_bonus1');
@@ -237,7 +236,7 @@
 	    	else 
 	    		$work_hour=$this->get_global('settings')->select('variable_shift_length', $this->get_workdays(), 1);
 	    	
-	    	return $work_hour*$this->getOvertimeCosts($day);
+	    	return $work_hour*$this->getHourlyCost($day);
 	    }
 	    
 	    function setName($fullname)
@@ -534,14 +533,7 @@
 	    	
 	        return $result;
 	    }
-	    
-	    function is_active($date=null)
-	    {
-	        //			$this->select('');
-	        //return $date ? $date < $this->select('inactive', 'date') : !$this->select('inactive');
-	        return true;
-	    }
-	    
+	    	    
 	    function remove_warning($id)
 	    {
 	        $this->remove('warning_date', $id);
@@ -1174,12 +1166,12 @@
 	    
 	    function get_deduction_calculation($attendance, $month)
 	    {	    	
-	    	$otc=$this->getOvertimeCosts($month);
+	    	$otc=$this->getHourlyCost($month);
 	    	
 //	    	if ($this->username==107)
 //	    		var_dump($this->daily_working_costs(), $this->count_workday($month));
-	    	$cuttings=($attendance[17]+$attendance[3]+$attendance[6])*
-	    				$this->daily_working_costs();//potongan mangkir + ijin + sakit
+	    	$cuttings=($attendance[17]+$attendance[3]+$attendance[6]+$attendance[23])*
+	    				$this->daily_working_costs();//potongan mangkir + ijin + sakit + dirumahkan
 	    	
 	    	$salary=$this->select('salary');
 	    	/*
@@ -1188,14 +1180,16 @@
 	    	if ($attendance[18]>0)
 		    	$cuttings+=$salary-$salary*($attendance[7]/
 		    		$this->get_global('settings')->select('monthly_workdays', 'maternity'));
-	    	
+	    		    	
 	    	$undertimes=$otc*$attendance[11]; //potongan ijin keluar	    				
 	    					    	
 	    	$result=[];
 	    	$result['salary_deduction']=$cuttings;
 	    	$result['salary_undertime']=$undertimes;
 	    	$result['fines']=$this->fine_installment($month);
-	    	
+	    	if ($attendance[23]>0)
+	    		$result['salary_forcedleave']=0.1*$this->select('salary')/30*$attendance[23];
+	    		
 	    	$deductions=[];
 	    		    	
 	    	$deductions['insurance1']=($this->select('insurance1') && $this->select('insurance1')=='on') ? 
@@ -1227,8 +1221,11 @@
 	    
 	    function get_skill_bonus($month)
 	    {	    	
-	    	if (($result=$this->t_select($month, 'salary_bonus2'))==0)
-	    	{	    		
+	    	$result=$this->t_select($month, 'salary_bonus2');
+	    	/*
+	    	 * Compatibility reason but obsolete and removed!
+	    	 */
+/*	    	{	    		
 		    	$creds=$this->get_global('system_credentials_list');
 		    	
 		    	foreach ($creds as ['name' => $name, 'module' => $module])
@@ -1243,7 +1240,7 @@
 
 		    		$result=$value>$result? $value : $result;
 		    	}
-	    	}
+	    	}*/
 	    	 
 	    	return $result;
 	    }
@@ -1294,7 +1291,7 @@
 	    	if (!$attendance)
 		    	$attendance=$this->get_attendance_conclusion(array_keys(attendance::conclusion_map()), $days);
 	    	$deductions=$this->get_deduction_calculation($attendance, $month);
-	    	$otc=$this->getOvertimeCosts($month);
+	    	$otc=$this->getHourlyCost($month);
 	    	
 	    	$overtime=$attendance[14]*$otc*1.5;
 	    	$overtime+=$attendance[7]*$otc*1.5;
@@ -1338,7 +1335,7 @@
 					$deductions['salary_ded1']+$result['others_deduction']+
 					$deductions['total_bills']+$result['fines'];
 	        
-	        $result['total']=$result['earnings']-$result['deductions'];
+	        $result['total']=$result['earnings']-$result['deductions']+$deductions['salary_forcedleave'];
 	        	        
 	        return $result;
 	    }
@@ -1370,7 +1367,7 @@
 	    {	        
 	    	$result=false;
 	    	
-	    	for ($i=0; $i<7-$this->get_workdays(); $i++)
+	    	for ($i=0; $i<7-$this->get_workdays($date); $i++)
 	    	{//var_dump($i);
 	    		if ($day_of_week==$this->get_personal_holiday($date, $i))
 	    		{	    			
@@ -1553,7 +1550,7 @@
             $this->addData('p_holiday_dayofweek', $dayofweek, $id);
             $this->addData('p_holiday_auth', $this->credentials->username);*/
 	    }
-	    
+	    	    
 	    function get_personal_holiday_data(?int $date, int $no)
 	    /*
 	     * Return the latest personal holiday
@@ -1561,11 +1558,15 @@
 	     */
 	    {
 	    	if (!$date) $date=\date::today('timestamp');
+	    		    		    	
+	    	if (!$this->temp_data['p_holiday_sorted'])
+	    	{
+		    	$p_holiday=$this->get('p_holiday', $no) ?? [];
+		    	ksort($p_holiday);
+	    	}
 	    	
-	    	$p_holiday=$this->get('p_holiday', $no) ?? [];
-	    	ksort($p_holiday);
 	    	$result=[];
-
+	    	
     		foreach ($p_holiday as ['start' => $start])
     		{
     			if (($date>=$this->select('p_holiday', $no, $start, 'start')) &&
@@ -1594,9 +1595,9 @@
 	    	$p_holiday=$this->get_personal_holiday_data($date, $no);
 //	    	$dayofweek=$p_holiday['dayofweek'];
 	    	
-	    	if ((!$dayofweek=$p_holiday['dayofweek']) && ($this->get_workdays()+$no<7))
+	    	if ((!$dayofweek=$p_holiday['dayofweek']) && ($this->get_workdays($date)+$no<7))
 	    	//auto adjust from friday, saturday, sunday
-	    		$dayofweek=$this->get_workdays()+$no+1; 
+	    		$dayofweek=$this->get_workdays($date)+$no+1; 
 //	    	else
 	    	//else just return sunday
 //	    		$dayofweek=7;
@@ -2020,12 +2021,13 @@
 //	        echo("<br>");
 	    }
 	    
-	    function mark_decommission($credentials)
+	    function mark_decommission($credentials, $status)
 	    {
 	        if (!($commission=$this->select('commission_end'))) $this->makeArray('commission_end');
 	        
 	        $c_count=count($commission ?? []);
 	        
+	        $this->set('work_relationship', $status);
 	        $this->addData('commission_end', \date::today('timestamp'), $c_count);
 	        $this->addData('commission_auth', $credentials, $c_count);
 	    }
@@ -2038,23 +2040,31 @@
 	        $this->addData('commission', \date::today('timestamp'), $c_count);
 	        
 	        $this->addData('commission_auth', $credentials->username, $c_count);
+	        
+	        $this->set('work_relationship', 0);	       
+	        $this->set('recruit_date', \date::today('begin_of_day'));
 	    }
 	    
 	    function is_commissioned($date=null)
 	    {
 	    	$date=$date ?: \date::today('timestamp');
-	        
-	        $result=false;
-	        $commission=$this->select('commission') ?? [0 => $this->begin_of_day($date, 'timestamp')];
-	        
-	        foreach ($commission as $no => $c)
-	        {
-	            $d=$this->select('commission_end', $no) ?? $this->end_of_day('', 'timestamp');
-	            
-	            if (($c<$date) && ($date<$d))
-	                $result=true;
-	        }
-	        
+	    	
+	    	if ($this->get('work_relationship'))
+	    	{
+		        $result=false;
+		        $commission=$this->select('commission') ?? [0 => $this->begin_of_day($date, 'timestamp')];
+		        
+		        foreach ($commission as $no => $c)
+		        {
+		            $d=$this->select('commission_end', $no) ?? $this->end_of_day('', 'timestamp');
+		            
+		            if (($c<$date) && ($date<$d))
+		                $result=true;
+		        }
+	    	}
+	    	else
+	    		$result=true;
+	    		
 	        return $result;
 	    }
 	    

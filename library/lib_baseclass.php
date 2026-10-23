@@ -1012,6 +1012,10 @@
 		}
 		
 		function sort($name, $sort_function='', $sort_flags=SORT_REGULAR)
+		/*
+		 * Obsolete and deprecated.
+		 * Replace with iSort
+		 */
 		{
 			if (is_array($this->data[$name]))
 			{
@@ -1154,7 +1158,27 @@
 				$this->set($name, [$value], ...$indices);
 			}
 		}
-
+		
+		function iSort($mode, $fields, ...$indices)
+		/*
+		 * Internal sorting function for data ini fields & indices;
+		 */
+		{
+			switch ($mode)
+			{
+				case 'ksort':
+					$array=$this->get($fields, ...$indices) ?? [];
+					ksort($array);
+					$this->set($fields, $array, ...$indices);
+					break;
+				case 'asort':
+					$array=$this->get($fields, ...$indices) ?? [];
+					asort($array);
+					$this->set($fields, $array, ...$indices);
+					break;
+			}
+		}
+		
 		function addData($name, $value, ...$indices)
 		/*
 		 * This function will check if a variable is already existed.

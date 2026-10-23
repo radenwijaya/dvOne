@@ -836,10 +836,13 @@
 		}		
 		
 		function toHTML()
+		/*
+		 * Special type of layouter, hence it kept the name toHTML
+		 */
 		{			
 			$forms=[];
-			foreach ($this->forms as $key => $form)
-				$forms[$key]=$form->toHTML();
+			foreach ($this->forms as $key => $form)					
+				$forms[$key]=$form->render()[value];
 			
 			$result=$this->layout_maker()->assign_layout($forms);
 			

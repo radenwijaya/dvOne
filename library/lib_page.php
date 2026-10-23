@@ -142,13 +142,15 @@
 			if ((isset($this->interface)) && ($this->interface->fibre_enabled('output')))
 				echo($prep);
 				
+			$cArray=$this->getContents();
+				
 			if ((isset($this->interface)) && ($this->interface->fibre_enabled('output')))
 			{
-				$content=$this->getContents()['prefix'];
-				echo($this->getContents()['prefix']);
+				$content=$cArray['prefix'];
+				echo($cArray['prefix']);
 				
-				if (isset($content['family_menu']))
-					echo($content['family_menu']);
+				if (isset($cArray['family_menu']))
+					echo($cArray['family_menu']);
 				
 				$f=$this->interface->get_fibre_loop();
 					
@@ -166,18 +168,17 @@
 						 $content.=$c;
 						 }*/
 						
-				$content.=$this->getContents()['suffix'];
-				echo($this->getContents()['suffix']);
+				$content.=$cArray['suffix'];
+				echo($cArray['suffix']);
 			}
 			else
 			{
 				$content='';
 				
-				$c=$this->getContents();
-				if (isset($c['family_menu']))
-					$content=$c['family_menu'];
+				if (isset($cArray['family_menu']))
+					$content=$cArray['family_menu'];
 					
-				$content.=$c['value'];
+				$content.=$cArray['value'];
 			}
 				
 			$exec=[];
@@ -302,7 +303,7 @@
 			if (is_array($contents))
 			{
 				/*
-				 * If CSV or Fibre Enabled
+				 * Only output when contents is an array
 				 */
 				switch ($contents[type])
 				{
@@ -313,19 +314,18 @@
 						$this->toJSON($contents[value]);
 						break;
 					default: case 'html':
-						$result=$this->toHTML();						
+						$result=$this->toHTML();
+						
+						/*
+						 * Non Fibre Mode Then Output using Echo 
+						 */
+						if (($this->interface) && (!$this->interface->fibre_enabled()))
+							echo($result);
+							
 						break;
 				}
 			}
-			else
-				/*
-				 * Only when fibre is disabled
-				 */
-			 	$result=$this->toHTML();
-				 	
-			if (($this->interface) && (!$this->interface->fibre_enabled()))
-				echo($result);
-				 		
+				 					 		
 			return $result;
 		}
 		
@@ -1181,7 +1181,7 @@
 			 * toHTML in is not recommended on junction and needs to be deprecated/removed.
 			 */
 			{
-				$result=[type => 'html', 'value' => $this->toHTML()];
+				$result=[type => 'html', 'mode' => 'direct', 'value' => $this->toHTML()];
 			}
 			else
 			{
@@ -1193,20 +1193,18 @@
 					$cs=$this->content_source() ? $this->content_source() : ($this->form ? $this->form : throw new Exception(implementation_not_ready));
 	
 					$result=$cs->render();
-					
-					$result['family_menu']=$this->enable_family_menu ? $this->write_family_menu() : null;						
+					$result['mode']='direct';
 				}
 				else
 				/*
 				 * Promise to output later during toHTML in page class
 				 */
 				{
-					$result=['type' => 'html'];
-					
-					if ($this->enable_family_menu)
-						$result['family_menu']=$this->write_family_menu();
+					$result=['type' => 'html', 'mode' => 'promise'];					
 				}
 			}
+			
+			$result['family_menu']=$this->enable_family_menu ? $this->write_family_menu() : null;			
 			
 			return $result;
 			

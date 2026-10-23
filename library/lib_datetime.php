@@ -275,16 +275,16 @@
 			if ($datestring=='')
 				$datestring=date::today($output);
 				
-				if (($output=='timestamp') && (is_int($datestring)))
-					$datestring=date('Y-m-d', $datestring);
+			if (($output=='timestamp') && (is_int($datestring)))
+				$datestring=date('Y-m-d', $datestring);
 					
-					$date_array=date_parse_from_format('Y-m-d', $datestring);
-					$eom=mktime(0, 0, 0, $date_array['month'], $date_array['day']+$difference, $date_array['year']);
+			$date_array=date_parse_from_format('Y-m-d', $datestring);
+			$eom=mktime(0, 0, 0, $date_array['month'], $date_array['day']+$difference, $date_array['year']);
 					
-					if ($output!='timestamp')
-						return date($output=='string' ? 'Y-m-d' : $output, $eom);
-						else
-							return $eom;
+			if ($output!='timestamp')
+				return date($output=='string' ? 'Y-m-d' : $output, $eom);
+			else
+				return $eom;
 		}
 		
 		static function change_month($difference, $datestring='', $output='string')

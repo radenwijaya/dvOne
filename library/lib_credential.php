@@ -980,7 +980,7 @@
 			$form->add_password_input('Password', 'password', 5, 128);
 			$form->add_submit_button('', 'submit', 'OK');
 			
-			return $form->toString();
+			return ['type' => 'html', 'value' => $form->toString()];
 		}
 				
 		function primary($primary = '')
