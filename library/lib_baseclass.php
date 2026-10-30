@@ -300,7 +300,7 @@
 		
 		function currency_output($value, $format=true, $output_locale=false)
 		{
-			return $format ? finance::money_format($output_locale ? $output_locale : setlocale(LC_MONETARY), $value) : $value;			
+			return $format ? finance::money_format($output_locale ? $output_locale : setlocale(LC_MONETARY), $value) : $value;
 			
 /*			$result=$value;
 			
@@ -310,7 +310,7 @@
 				$invoice_locale=$output_locale;
 			else
 				$invoice_locale=$current_locale;
-					
+			
 			if ($format)
 			{
 				if ($current_locale==$invoice_locale)
@@ -1158,7 +1158,7 @@
 				$this->set($name, [$value], ...$indices);
 			}
 		}
-		
+
 		function iSort($mode, $fields, ...$indices)
 		/*
 		 * Internal sorting function for data ini fields & indices;
@@ -3617,7 +3617,7 @@
 			return $this->form;
 		}
 	}	
-		
+	
 	class conversion extends entity
 	{		
 		var $length_conversion_table;

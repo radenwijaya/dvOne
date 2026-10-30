@@ -427,8 +427,7 @@
 			}
 			catch (Exception $e)
 			{
-				echo $e->getMessage();
-				die;
+				throw $e;
 			}
 		
 			if ($query_result)
@@ -762,7 +761,7 @@
 			
 			$values_string=implode(", ", $values_array);
 			
-			$query="UPDATE ".$this->SQLSafeString($table)." SET ".$values_string." WHERE ".$this->SQLSafeString($key_field)."='".$this->SQLSafeString($key_value)."'";
+			$query="UPDATE ".$this->SQLSafeString($table)." SET ".$values_string." WHERE `".$this->SQLSafeString($key_field)."`='".$this->SQLSafeString($key_value)."'";
 			
 			if ($this->is_dq_enabled())
 			{
@@ -781,7 +780,7 @@
 		 * Only support string values for now
 		 */
 		{
-			$fields_array=[$this->SQLSafeString($key_field)];
+			$fields_array=["`".$this->SQLSafeString($key_field)."`"];
 			$values_array=["'".$this->SQLSafeString($key_value)."'"];
 			
 			foreach ($values as $field => $value)

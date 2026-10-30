@@ -421,6 +421,11 @@
 			
 			return $result;
 		}
+
+		static function png($data, $alt=null, $id=null, $width=0, $height=0, $attr=[])
+		{
+			return self::img('data:image/png;base64,'.$data, $alt, $id, $width, $height, $attr);
+		}
 		
 		static function list($ordered=true, ...$elements)
 		{

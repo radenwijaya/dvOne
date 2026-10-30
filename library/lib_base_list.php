@@ -130,7 +130,7 @@
 		function demand($uniqueid,  &$is_new=false)
 		/*
 		 * Thiw method will select Check if not exists, then create new and flush it!
-		 *
+		 * 
 		 * hence anything made form select_or_new must be updated and not flushed!
 		 */
 		{
@@ -315,16 +315,16 @@
 		{
 			$this->default_dbfill_condition=$new_condition;
 		}
-		
+
 		function remove_default_condition(...$conditions)
 		/*
-		 * Enters the function to remove
+		 * Remove default fill condition, enters function name to remove using [f => $function]
 		 */
 		{
 			foreach ($conditions as $condition)
 				foreach ($this->default_dbfill_condition as $key => [f => $f])
 					if ($f==$condition)
-						unset($this->default_dbfill_condition[$key]);			
+						unset($this->default_dbfill_condition[$key]);
 		}
 		
 		function db_export_fill($conditions=[], $addon_indices=[], $from_archive=false, $limit=PHP_INT_MAX)
@@ -633,7 +633,7 @@
 				
 				if (!empty($db_uniqueids))
 				{
-					$query='SELECT * FROM '.$table_name.' WHERE '.$query_field.' IN ('.implode(', ', $db_uniqueids).')';
+					$query='SELECT * FROM `'.$table_name.'` WHERE `'.$query_field.'` IN ('.implode(', ', $db_uniqueids).')';
 					$qr=$this->secure_db->query($query);
 					
 					while ($row=$this->secure_db->next_result($qr))
@@ -679,7 +679,7 @@
 						 * Loading from archive
 						 */
 						{
-							$query='SELECT * FROM '.$table_name.' WHERE '.$query_field.' IN ('.implode(', ', $db_uniqueids).')';
+							$query='SELECT * FROM `'.$table_name.'` WHERE `'.$query_field.'` IN ('.implode(', ', $db_uniqueids).')';
 							$qr=$this->secure_db->archive_query($query);
 							
 							//							var_dump($normal_uid, $db_uniqueids);echo("<BR><BR>");
@@ -2072,7 +2072,7 @@
 				
 				if (!empty($db_uniqueids))
 				{
-					$query='SELECT * FROM '.$table_name.' WHERE '.implode(' OR ', $db_uniqueids);
+					$query='SELECT * FROM `'.$table_name.'` WHERE '.implode(' OR ', $db_uniqueids);
 					$qr=$this->secure_db->query($query);
 					
 					while ($row=$this->secure_db->next_result($qr))
@@ -2107,7 +2107,7 @@
 						
 						if (!empty($db_uniqueids))
 						{
-							$query='SELECT * FROM '.$table_name.' WHERE '.implode(' OR ', $db_uniqueids);
+							$query='SELECT * FROM `'.$table_name.'` WHERE '.implode(' OR ', $db_uniqueids);
 							$qr=$this->secure_db->archive_query($query);
 							//							var_dump($normal_uid, $db_uniqueids);echo("<BR><BR>");
 							while ($row=$this->secure_db->archive_next_result($qr))
@@ -2331,7 +2331,7 @@
 			if ($this->fb_has_fibre('output'))
 				$result=$this->fb_flush($result, 'output');
 				
-			return $result;
+			return [type => 'html', value => $result];
 		}		
 	}
 	

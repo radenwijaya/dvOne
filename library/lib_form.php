@@ -190,7 +190,6 @@
 		 * While the other stuff refactored to inputform_control
 		 */		 
 		{
-//			$output_step_count=count($this->rv_output_step);
 			if ($this->output_function())
 			{
 				$output_function=$this->output_function();
@@ -2803,8 +2802,19 @@
 					break;
 				case 'dropdown':
 					$result=$this->getfield($name, $field);
-					if ((is_null($result)) && ($field=='value'))
-						$result=$this->getfield($name, 'selected');
+					if (is_null($result))
+					{
+						switch ($field)
+						{
+							case display:
+								$selected=$this->getfield($name, 'selected');
+								$result=$this->fields[$name]['items'][$selected][display];
+								break;
+							case 'value': default:
+								$result=$this->getfield($name, 'selected');
+								break;
+						}
+					}
 					break;
 				case 'checkbox':
 					$result=$this->getfield($name, 'checked')==$this->getfield($name, $field);

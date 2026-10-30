@@ -1180,7 +1180,7 @@
 	    	if ($attendance[18]>0)
 		    	$cuttings+=$salary-$salary*($attendance[7]/
 		    		$this->get_global('settings')->select('monthly_workdays', 'maternity'));
-	    		    	
+	    	
 	    	$undertimes=$otc*$attendance[11]; //potongan ijin keluar	    				
 	    					    	
 	    	$result=[];
@@ -1225,7 +1225,8 @@
 	    	/*
 	    	 * Compatibility reason but obsolete and removed!
 	    	 */
-/*	    	{	    		
+/*	    	if (($result=$this->t_select($month, 'salary_bonus2'))==0)
+  			{	    		
 		    	$creds=$this->get_global('system_credentials_list');
 		    	
 		    	foreach ($creds as ['name' => $name, 'module' => $module])
