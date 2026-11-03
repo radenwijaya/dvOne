@@ -146,11 +146,17 @@
 				
 			if ((isset($this->interface)) && ($this->interface->fibre_enabled('output')))
 			{
-				$content=$cArray['prefix'];
-				echo($cArray['prefix']);
+				if (isset($cArray['prefix']))
+				{
+					$content=$cArray['prefix'];
+					echo($cArray['prefix']);
+				}
 				
 				if (isset($cArray['family_menu']))
+				{
+					$content=$cArray['family_menu'];
 					echo($cArray['family_menu']);
+				}
 				
 				$f=$this->interface->get_fibre_loop();
 					
@@ -168,8 +174,11 @@
 						 $content.=$c;
 						 }*/
 						
-				$content.=$cArray['suffix'];
-				echo($cArray['suffix']);
+				if (isset($cArray['suffix']))
+				{
+					$content.=$cArray['suffix'];
+					echo($cArray['suffix']);
+				}
 			}
 			else
 			{
@@ -1181,7 +1190,12 @@
 			 * toHTML in is not recommended on junction and needs to be deprecated/removed.
 			 */
 			{
-				$result=[type => 'html', 'mode' => 'direct', 'value' => $this->toHTML()];
+				$value=$this->toHTML();
+				if (is_array($value))
+					$result=$value;				
+				else
+					$result=[type => 'html', 'value' => $value];
+				$result['mode']='direct';
 			}
 			else
 			{
